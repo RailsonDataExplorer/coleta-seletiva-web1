@@ -1,0 +1,29 @@
+# Ignorar arquivos de configuração local e senhas
+.env
+application-local.yml
+
+# Ignorar arquivos compilados do Java/Gradle/Maven
+target/
+build/
+*.class
+*.jar
+*.war
+
+# Ignorar arquivos do IntelliJ IDEA (caso use no futuro)
+.idea/
+*.iml
+*.ipr
+*.iws
+out/
+
+# Ignorar arquivos do VS Code
+.vscode/
+*.code-workspace
+
+# Ignorar logs
+*.log
+logs/
+
+# Ignorar arquivos do sistema operacional
+.DS_Store
+Thumbs.db
