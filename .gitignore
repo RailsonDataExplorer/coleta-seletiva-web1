@@ -1,29 +1,40 @@
-# Ignorar arquivos de configuração local e senhas
+# Configurações locais / Segredos
 .env
-application-local.yml
-
-# Ignorar arquivos compilados do Java/Gradle/Maven
-target/
+.env.local
+HELP.md
+.gradle
 build/
-*.class
-*.jar
-*.war
+!gradle/wrapper/gradle-wrapper.jar
+!**/src/main/**/build/
+!**/src/test/**/build/
 
-# Ignorar arquivos do IntelliJ IDEA (caso use no futuro)
-.idea/
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+bin/
+!**/src/main/**/bin/
+!**/src/test/**/bin/
+
+### IntelliJ IDEA ###
+.idea
+*.iws
 *.iml
 *.ipr
-*.iws
 out/
+!**/src/main/**/out/
+!**/src/test/**/out/
 
-# Ignorar arquivos do VS Code
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+
+### VS Code ###
 .vscode/
-*.code-workspace
-
-# Ignorar logs
-*.log
-logs/
-
-# Ignorar arquivos do sistema operacional
-.DS_Store
-Thumbs.db
