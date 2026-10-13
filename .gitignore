@@ -1,6 +1,9 @@
 # Configurações locais / Segredos
+application-local.yml
 .env
 .env.local
+*.class
+*.jar
 HELP.md
 .gradle
 build/
