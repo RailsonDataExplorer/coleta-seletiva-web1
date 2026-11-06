@@ -1,5 +1,0 @@
-spring:
-  datasource:
-    url: jdbc:postgresql://localhost:5433/coletaseletiva
-    username: admin
-    password: admin123
