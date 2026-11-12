@@ -41,3 +41,15 @@ out/
 
 ### VS Code ###
 .vscode/
+
+### Arquivos de teste temporários (curl/PowerShell) ###
+material.json
+material-invalido.json
+
+### Logs ###
+*.log
+
+### Sistema Operacional ###
+.DS_Store
+Thumbs.db
+desktop.ini

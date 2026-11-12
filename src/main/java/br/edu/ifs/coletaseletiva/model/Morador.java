@@ -1,30 +1,40 @@
 package br.edu.ifs.coletaseletiva.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.Data;
 import java.time.LocalDateTime;
 
-@Entity // Diz ao JPA que esta classe é uma tabela no banco
-@Table(name = "moradores") // Define o nome da tabela (opcional, mas boa prática)
-@Data // Anotação do Lombok: cria getters, setters, toString, equals e hashCode automaticamente
+@Entity
+@Table(name = "moradores")
+@Data
 public class Morador {
 
-    @Id // Define que este é o campo da Chave Primária (Primary Key)
-    @GeneratedValue(strategy = GenerationType.IDENTITY) // O banco vai gerar o ID automaticamente (auto-incremento)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, length = 100) // Não pode ser nulo no banco, max 100 caracteres
+    @NotBlank(message = "O nome do morador é obrigatório")
+    @Size(min = 3, max = 100, message = "O nome deve ter entre 3 e 100 caracteres")
+    @Column(nullable = false, length = 100)
     private String nome;
 
-    @Column(nullable = false, unique = true) // Email não pode ser nulo e não pode repetir
+    @NotBlank(message = "O email é obrigatório")
+    @Email(message = "O email deve ser válido")
+    @Column(nullable = false, unique = true)
     private String email;
 
+    @NotBlank(message = "O endereço é obrigatório")
+    @Size(max = 255, message = "O endereço deve ter no máximo 255 caracteres")
     @Column(nullable = false)
     private String endereco;
 
+    @Size(max = 15, message = "O telefone deve ter no máximo 15 caracteres")
     @Column(length = 15)
     private String telefone;
 
     @Column(name = "data_cadastro")
-    private LocalDateTime dataCadastro = LocalDateTime.now(); // Define a data atual ao criar
+    private LocalDateTime dataCadastro = LocalDateTime.now();
 }
