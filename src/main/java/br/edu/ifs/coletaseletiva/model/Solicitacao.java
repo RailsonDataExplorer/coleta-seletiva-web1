@@ -1,11 +1,14 @@
 package br.edu.ifs.coletaseletiva.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
-import lombok.Data;
-import java.time.LocalDateTime;
 import jakarta.validation.constraints.Size;
+import lombok.Data;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "solicitacoes")
@@ -16,30 +19,63 @@ public class Solicitacao {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    // Gerado automaticamente pelo Service (sem @NotBlank)
+    @Size(max = 50)
+    @Column(unique = true, nullable = false)
+    private String protocolo;
+
     @NotNull(message = "O morador é obrigatório")
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "morador_id", nullable = false)
     private Morador morador;
 
-    @NotNull(message = "O material é obrigatório")
-    @ManyToOne
-    @JoinColumn(name = "material_id", nullable = false)
-    private Material material;
-
     @NotNull(message = "O ponto de coleta é obrigatório")
-    @ManyToOne
-    @JoinColumn(name = "ponto_coleta_id", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "ponto_id", nullable = false)
     private PontoColeta pontoColeta;
 
-    @NotNull(message = "A quantidade é obrigatória")
-    @Positive(message = "A quantidade deve ser maior que zero")
+    // Copiado automaticamente pelo Service a partir do endereço do morador (sem @NotBlank)
+    @Column(name = "endereco_copia", columnDefinition = "TEXT", nullable = false)
+    private String enderecoCopia;
+
+    // Definida automaticamente pelo Service como "SOLICITADA" (sem @NotBlank)
+    @Size(max = 30)
     @Column(nullable = false)
-    private Double quantidadeKg;
+    private String situacao = "SOLICITADA";
 
-    @Column(name = "data_solicitacao")
-    private LocalDateTime dataSolicitacao = LocalDateTime.now();
+    @Column(name = "data_criacao")
+    private LocalDateTime dataCriacao = LocalDateTime.now();
 
-    @Size(max = 20, message = "O status deve ter no máximo 20 caracteres")
-    @Column(length = 20)
-    private String status;
+    @Column(columnDefinition = "TEXT")
+    private String observacoes;
+
+    // RN06: Controle de concorrência (optimistic locking)
+    @Version
+    @Column(nullable = false)
+    private Integer versao = 0;
+
+    // RF08: Uma solicitação tem vários itens
+    @Valid
+    @OneToMany(mappedBy = "solicitacao", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ItemSolicitacao> itens = new ArrayList<>();
+
+    // RF15: Histórico de alterações
+    @OneToMany(mappedBy = "solicitacao", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Historico> historico = new ArrayList<>();
+
+    // Métodos auxiliares para manter o relacionamento bidirecional
+    public void adicionarItem(ItemSolicitacao item) {
+        itens.add(item);
+        item.setSolicitacao(this);
+    }
+
+    public void removerItem(ItemSolicitacao item) {
+        itens.remove(item);
+        item.setSolicitacao(null);
+    }
+
+    public void registrarHistorico(Historico registro) {
+        historico.add(registro);
+        registro.setSolicitacao(this);
+    }
 }

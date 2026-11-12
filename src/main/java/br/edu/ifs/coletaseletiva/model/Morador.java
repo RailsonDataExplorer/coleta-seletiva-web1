@@ -6,6 +6,8 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "moradores")
@@ -17,8 +19,8 @@ public class Morador {
     private Long id;
 
     @NotBlank(message = "O nome do morador é obrigatório")
-    @Size(min = 3, max = 100, message = "O nome deve ter entre 3 e 100 caracteres")
-    @Column(nullable = false, length = 100)
+    @Size(min = 3, max = 100)
+    @Column(nullable = false)
     private String nome;
 
     @NotBlank(message = "O email é obrigatório")
@@ -26,15 +28,29 @@ public class Morador {
     @Column(nullable = false, unique = true)
     private String email;
 
-    @NotBlank(message = "O endereço é obrigatório")
-    @Size(max = 255, message = "O endereço deve ter no máximo 255 caracteres")
-    @Column(nullable = false)
-    private String endereco;
-
-    @Size(max = 15, message = "O telefone deve ter no máximo 15 caracteres")
+    @Size(max = 15)
     @Column(length = 15)
     private String telefone;
 
+    // RN03: Soft delete (não excluir fisicamente)
+    @Column(nullable = false)
+    private Boolean ativo = true;
+
     @Column(name = "data_cadastro")
     private LocalDateTime dataCadastro = LocalDateTime.now();
+
+    // RF02: Um morador possui vários endereços
+    @OneToMany(mappedBy = "morador", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Endereco> enderecos = new ArrayList<>();
+
+    // Método auxiliar para adicionar endereço
+    public void adicionarEndereco(Endereco endereco) {
+        enderecos.add(endereco);
+        endereco.setMorador(this);
+    }
+
+    public void removerEndereco(Endereco endereco) {
+        enderecos.remove(endereco);
+        endereco.setMorador(null);
+    }
 }

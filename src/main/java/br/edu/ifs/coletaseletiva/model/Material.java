@@ -15,12 +15,21 @@ public class Material {
     private Long id;
 
     @NotBlank(message = "O nome do material é obrigatório")
-    @Size(min = 2, max = 100, message = "O nome deve ter entre 2 e 100 caracteres")
-    @Column(nullable = false, unique = true)
+    @Size(max = 100)
+    @Column(unique = true, nullable = false)
     private String nome;
 
-    @NotBlank(message = "O tipo do material é obrigatório")
-    @Size(min = 2, max = 50, message = "O tipo deve ter entre 2 e 50 caracteres")
+    @Column(columnDefinition = "TEXT")
+    private String descricao;
+
+    @NotBlank(message = "A unidade de medida é obrigatória")
+    @Size(max = 20)
     @Column(nullable = false)
-    private String tipo;
+    private String unidade; // Ex: KG, UNIDADE, LITRO
+
+    @Column(columnDefinition = "TEXT")
+    private String orientacao;
+
+    @Column(nullable = false)
+    private Boolean ativo = true;
 }
